@@ -1,0 +1,15 @@
+ketikov du = 4.0
+tiv a = 3
+tiv f = 5
+ketikov g = 68.9
+logic b = TRUE
+a = f + 2
+du = g + 5.1
+tox s = " yuhuuuuu " + qwd
+tox p = "efnekg4r ernvrwemc ererf"
+p = p + s
+tpel s
+tpel p
+tpel a
+tpel b
+tpel du
