@@ -1,68 +1,14 @@
 #include "MyType.h"
 
-
-MyType::enumType MyType::getType(const std::string& str)
-{
-	try
-	{
-		if (str == "tiv")
-		{
-			return (INTEGER);
-		}
-		else if (str == "ketikov")
-		{
-			return (DOUBLE);
-		}
-		else if (str == "tox")
-		{
-			return (STRING);
-		}
-		else if (str == "logic")
-		{
-			return (BOOLEAN);
-		}
-		else
-		{
-			throw std::exception();
-		}
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "no such type exists" << std::endl;
-		exit(1);
-	}
-	return (INTEGER);
-}
-
-MyType::enumType MyType::_Get_type(const std::string& str)
-{
-	if (str == "TRUE" || str == "FALSE")
-	{
-		return BOOLEAN;
-	}
-    std::size_t found = str.find('.');
-    if (found != std::string::npos)
-    {
-          return DOUBLE;
-    }
-    found = str.find('"');
-    if(found != std::string::npos)
-    {
-        return STRING;
-    }
-    return INTEGER;
-}
-
-void	swap(MyType& first, MyType& second) noexcept
+void swap(MyType& first, MyType& second)
 {
 	using std::swap;
 
-	swap(first.val_type, second.val_type);
-	swap(first.val, second.val);
-	swap(first.nbr, second.nbr);
-	swap(first.d_nbr, second.d_nbr);
+	swap(first.my_type, second.my_type);
+	swap(first.number, second.number);
+	swap(first.floate_number, second.floate_number);
+	swap(first.value, second.value);
 	swap(first.str, second.str);
-
 }
 
 MyType::MyType(MyType&& other)
@@ -70,52 +16,45 @@ MyType::MyType(MyType&& other)
 	swap(*this, other);
 }
 
-MyType&	MyType::operator=(const MyType& type)
+MyType&	MyType::operator=(const MyType& other)
 {
-	if (this == &type)
+	if (this == &other)
 	{
-		return *this;
+		return (*this);
 	}
-	MyType tmp(type);
+	MyType	tmp(other);
 	swap(*this, tmp);
 	return (*this);
 }
 
-MyType& MyType::operator=(MyType&& type)
+MyType&	MyType::operator=(MyType&& other)
 {
-	MyType tmp(std::move(type));
+	MyType	tmp(std::move(other));
 	swap(*this, tmp);
-	return *this;
+	return (*this);
 }
 
 MyType operator+(const MyType& lhs, const MyType& rhs)
 {
-	MyType tmp;
-	try{
-		if(lhs.val_type == 0 &&  rhs.val_type == 0)
-		{
-			tmp.val_type = MyType::enumType::INTEGER;
-			tmp.nbr = lhs.nbr + rhs.nbr;
-		}
-		else if (lhs.val_type == 1 &&  rhs.val_type == 1)
-		{
-			tmp.val_type = MyType::enumType::DOUBLE;
-			tmp.d_nbr = lhs.d_nbr + rhs.d_nbr;
-		}
-		else if (lhs.val_type == 3 &&  rhs.val_type == 3)
-		{
-			tmp.val_type = MyType::enumType::STRING;
-			tmp.str = lhs.str + rhs.str;
-		}
-		else
-		{
-			throw std::exception();
-		}
-	}
-	catch(const std::exception& e)
+	MyType	tmp;
+	if (lhs.my_type == Utils::INTEGER && rhs.my_type == Utils::INTEGER)
 	{
-		std::cerr << "ERROR" << std::endl;
-		exit(1);
+		tmp.my_type = Utils::INTEGER;
+		tmp.number = lhs.number + rhs.number;
+	}
+	else if (lhs.my_type == Utils::DOUBLE && rhs.my_type == Utils::DOUBLE)
+	{
+		tmp.my_type = Utils::DOUBLE;
+		tmp.floate_number = lhs.floate_number + rhs.floate_number;
+	}
+	else if (lhs.my_type == Utils::STRING && rhs.my_type == Utils::STRING)
+	{
+		tmp.my_type = Utils::STRING;
+		tmp.str = lhs.str + rhs.str;
+	}
+	else
+	{
+		throw "cannot be added";
 	}
 	return (tmp);
 }
@@ -123,57 +62,39 @@ MyType operator+(const MyType& lhs, const MyType& rhs)
 MyType operator-(const MyType& lhs, const MyType& rhs)
 {
 	MyType tmp;
-	try
+	if(lhs.my_type == Utils::INTEGER && rhs.my_type == Utils::INTEGER)
 	{
-		if(lhs.val_type == 0 &&  rhs.val_type == 0)
-		{
-			tmp.val_type = MyType::enumType::INTEGER;
-			tmp.nbr = lhs.nbr - rhs.nbr;
-		}
-		else if (lhs.val_type == 1 &&  rhs.val_type == 1)
-		{
-			tmp.val_type = MyType::enumType::DOUBLE;
-			tmp.d_nbr = lhs.d_nbr - rhs.d_nbr;
-		}
-		else
-		{
-			throw std::exception();
-		}
+		tmp.my_type = Utils::INTEGER;
+		tmp.number = lhs.number - rhs.number;
 	}
-	catch(const std::exception& e)
+	else if (lhs.my_type == Utils::DOUBLE && rhs.my_type == Utils::DOUBLE)
 	{
-		std::cerr << "ERROR" << std::endl;
-		exit(1);
+		tmp.my_type = Utils::DOUBLE;
+		tmp.floate_number = lhs.floate_number - rhs.floate_number;
 	}
-	
-	
+	else
+	{
+		throw "cannot be subtraction";
+	}
 	return (tmp);
 }
 
 MyType operator*(const MyType& lhs, const MyType& rhs)
 {
 	MyType tmp;
-	try
+	if(lhs.my_type == Utils::INTEGER && rhs.my_type == Utils::INTEGER)
 	{
-		if(lhs.val_type == 0 &&  rhs.val_type == 0)
-		{
-			tmp.val_type = MyType::enumType::INTEGER;
-			tmp.nbr = lhs.nbr * rhs.nbr;
-		}
-		else if (lhs.val_type == 1 &&  rhs.val_type == 1)
-		{
-			tmp.val_type = MyType::enumType::DOUBLE;
-			tmp.d_nbr = lhs.d_nbr * rhs.d_nbr;
-		}
-		else
-		{
-			throw std::exception();
-		}
+		tmp.my_type = Utils::INTEGER;
+		tmp.number = lhs.number * rhs.number;
 	}
-	catch(const std::exception& e)
+	else if (lhs.my_type == Utils::DOUBLE && rhs.my_type == Utils::DOUBLE)
 	{
-		std::cerr << "ERROR" << std::endl;
-		exit(1);
+		tmp.my_type = Utils::DOUBLE;
+		tmp.floate_number = lhs.floate_number * rhs.floate_number;
+	}
+	else
+	{
+		throw "cannot be multiplication";
 	}
 	return (tmp);
 }
@@ -181,84 +102,75 @@ MyType operator*(const MyType& lhs, const MyType& rhs)
 MyType operator/(const MyType& lhs, const MyType& rhs)
 {
 	MyType tmp;
-	try
+	if(lhs.my_type == Utils::INTEGER && rhs.my_type == Utils::INTEGER)
 	{
-		if(lhs.val_type == 0 &&  rhs.val_type == 0)
+		if (rhs.number == 0)
 		{
-			if (rhs.nbr == 0)
-			{
-				throw std::exception();
-			}
-			tmp.val_type = MyType::enumType::INTEGER;
-			tmp.nbr = lhs.nbr / rhs.nbr;
+			throw "divided by 0";
 		}
-		else if (lhs.val_type == 1 &&  rhs.val_type == 1)
-		{
-			if (rhs.d_nbr == 0)
-			{
-				throw std::exception();
-			}
-			tmp.val_type = MyType::enumType::DOUBLE;
-			tmp.d_nbr = lhs.d_nbr / rhs.d_nbr;
-		}
-		else
-		{
-			throw std::exception();
-		}
+		tmp.my_type = Utils::INTEGER;
+		tmp.number = lhs.number / rhs.number;
 	}
-	catch(const std::exception& e)
+	else if (lhs.my_type == Utils::DOUBLE && rhs.my_type == Utils::DOUBLE)
 	{
-		std::cerr << "ERROR" << std::endl;
-		exit(1);
+		if (rhs.floate_number == 0)
+		{
+			throw "divided by 0";
+		}
+		tmp.my_type = Utils::DOUBLE;
+		tmp.floate_number = lhs.floate_number / rhs.floate_number;
+	}
+	else
+	{
+		throw "cannot be divided";
 	}
 	return (tmp);
 }
 
 bool	operator==(const MyType& lhs, const MyType& rhs)
 {
-	if (lhs.val_type != rhs.val_type)
+	if (lhs.my_type != rhs.my_type)
 		throw "variables have different types";
-	else if (lhs.val_type == MyType::INTEGER)
-	   return (lhs.nbr == rhs.nbr);
-	else if (lhs.val_type == MyType::DOUBLE)
-	   return (lhs.d_nbr == rhs.d_nbr);	
-	else if (lhs.val_type == MyType::STRING)
+	else if (lhs.my_type == Utils::INTEGER)
+	   return (lhs.number == rhs.number);
+	else if (lhs.my_type == Utils::DOUBLE)
+	   return (lhs.floate_number == rhs.floate_number);	
+	else if (lhs.my_type == Utils::STRING)
 	   return (lhs.str == rhs.str);	
 	else
-	   return (lhs.val == rhs.val);	
+	   return (lhs.value == rhs.value);	
 }
 
-bool	operator!=(const MyType& lhs, const MyType& rhs)
+bool operator!=(const MyType& lhs, const MyType& rhs)
 {
 	return (!(lhs == rhs));
 }
 
-bool	operator<(const MyType& lhs, const MyType& rhs)
+bool operator<(const MyType& lhs, const MyType& rhs)
 {
-	if (lhs.val_type != rhs.val_type)
+	if (lhs.my_type != rhs.my_type)
 		throw "variables have different types";
-	else if (lhs.val_type == MyType::INTEGER)
-	   return (lhs.nbr < rhs.nbr);
-	else if (lhs.val_type == MyType::DOUBLE)
-	   return (lhs.d_nbr < rhs.d_nbr);	
-	else if (lhs.val_type == MyType::STRING)
+	else if (lhs.my_type == Utils::INTEGER)
+	   return (lhs.number < rhs.number);
+	else if (lhs.my_type == Utils::DOUBLE)
+	   return (lhs.floate_number < rhs.floate_number);	
+	else if (lhs.my_type == Utils::STRING)
 	   return (lhs.str < rhs.str);	
 	else
-	   return (lhs.val < rhs.val);
+	   return (lhs.value < rhs.value);
 }
 
-
-bool	operator>(const MyType& lhs, const MyType& rhs)
+bool operator>(const MyType& lhs, const MyType& rhs)
 {
 	return (!(lhs == rhs || lhs < rhs));
 }
 
-bool	operator<=(const MyType& lhs, const MyType& rhs)
+bool operator<=(const MyType& lhs, const MyType& rhs)
 {
 	return (lhs == rhs || lhs < rhs);
 }
 
-bool	operator>=(const MyType& lhs, const MyType& rhs)
+bool operator>=(const MyType& lhs, const MyType& rhs)
 {
 	return (!(lhs < rhs));
 }

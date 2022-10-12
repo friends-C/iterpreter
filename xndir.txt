@@ -5,11 +5,21 @@ ketikov g = 68.9
 logic b = TRUE
 a = f + 2
 du = g + 5.1
-tox s = " yuhuuuuu " + qwd
+tox s = " yuhuuuuu "
 tox p = "efnekg4r ernvrwemc ererf"
-p = p + s
-tpel s
-tpel p
-tpel a
-tpel b
-tpel du
+ete a >= f
+	tpel a
+ete_voch
+{
+	tpel b
+	tpel s
+	tpel p
+	tpel a
+	tpel b
+	tpel du
+}
+cikl a >= 2
+{
+	tpel a
+	a = a - 1
+}

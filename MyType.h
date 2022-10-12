@@ -1,87 +1,73 @@
 #ifndef MYTYPE_H
 # define MYTYPE_H
 
-# include <string>
-# include <utility>
-# include <exception>
+# include "utils.h"
 # include <iostream>
+# include <exception>
 
 class MyType
 {
-	public:
-		MyType() = default;
-		MyType(int n) : val_type(INTEGER), nbr(n) {	}
-		MyType(double d_n) : val_type(DOUBLE), d_nbr(d_n) {	}
-		MyType(const std::string& s) : val_type(STRING), str(s) {	}
-		MyType(const MyType& other) = default;
-		MyType(MyType&& other);
-		~MyType() = default;
-		
-		enum enumType
-		{
-			INTEGER	= 0,
-			DOUBLE	= 1,
-			BOOLEAN	= 2,
-			STRING	= 3
-		};
+public:
+	//constructors
+	MyType() = default;
+	MyType(const MyType& other) = default;
+	MyType(MyType&& other);
+	MyType(bool val) : my_type(Utils::BOOLEAN), value(val) {}
+	MyType(const std::string& s) : my_type(Utils::STRING), str(s) {}
+	MyType(const int nbr) : my_type(Utils::INTEGER), number(nbr) {}
+	MyType(const double float_n) : my_type(Utils::DOUBLE), floate_number(float_n) {}
 
+	// assignment and move operators
+	//-----------------------------------------------
+	MyType&	operator=(const MyType& other);
+	MyType&	operator=(MyType&& other);
+	//-----------------------------------------------
 
-		friend void	swap(MyType& first, MyType& second) noexcept;
+	// private section for member function
+	friend void	swap(MyType& first, MyType& second);
 
-//		funcions that determine literal and variable types
-//----------------------------------------------------------------------
-		static enumType getType(const std::string& str);
-		static enumType _Get_type(const std::string& str);
-//----------------------------------------------------------------------
+	//binary operators +, -, *, /
+	//-----------------------------------------------
+	friend	MyType operator+(const MyType& lhs, const MyType& rhs);
+	friend	MyType operator-(const MyType& lhs, const MyType& rhs);
+	friend	MyType operator*(const MyType& lhs, const MyType& rhs);
+	friend	MyType operator/(const MyType& lhs, const MyType& rhs);
+	//-----------------------------------------------
 
-//		assignment and move assigment operators
-//---------------------------------------------
-		MyType&	operator=(const MyType& type);
-		MyType& operator=(MyType&& type);
-//---------------------------------------------
+	//		Binary comparison operators
+	//----------------------------------------------------------------------
+	friend bool operator==(const MyType& lhs, const MyType& rhs);
+	friend bool operator!=(const MyType& lhs, const MyType& rhs);
+	friend bool operator>(const MyType& lhs, const MyType& rhs);
+	friend bool operator<(const MyType& lhs, const MyType& rhs);
+	friend bool operator<=(const MyType& lhs, const MyType& rhs);
+	friend bool operator>=(const MyType& lhs, const MyType& rhs);
+	//----------------------------------------------------------------------
 
-//		binary operator+, operator-, operator*, operator/,
-//----------------------------------------------------------------------
-		friend MyType operator+(const MyType& lhs, const MyType& rhs);
-		friend MyType operator-(const MyType& lhs, const MyType& rhs);
-		friend MyType operator*(const MyType& lhs, const MyType& rhs);
-		friend MyType operator/(const MyType& lhs, const MyType& rhs);
-//----------------------------------------------------------------------
+	//seter-geter functions
+	//-----------------------------------------------
+		void set_type(const Utils::Type& type) { this->my_type = type; }
+		Utils::Type get_type() const	{ return (my_type); }
 
-//		Binary comparison operators
-//----------------------------------------------------------------------
-		friend bool operator==(const MyType& lhs, const MyType& rhs);
-		friend bool operator!=(const MyType& lhs, const MyType& rhs);
-		friend bool operator>(const MyType& lhs, const MyType& rhs);
-		friend bool operator<(const MyType& lhs, const MyType& rhs);
-		friend bool operator<=(const MyType& lhs, const MyType& rhs);
-		friend bool operator>=(const MyType& lhs, const MyType& rhs);
-//----------------------------------------------------------------------
+		void set_int(int n) { this->number = n; }
+		int get_int() const { return number; }
 
-//		seter-geter functions
-//----------------------------------------------------------------------
-		void		set_type(const enumType& type) { this->val_type = type; }
-		enumType	get_type() const	{ return (val_type); }
+		void set_double(double d) { this->floate_number = d;}
+		double get_double() const { return floate_number; }
 
-		void		set_int(int n) { this->nbr = n; }
-		int			get_int() const { return nbr; }
+		void set_string(const std::string& s) { this->str = s; }
+		std::string get_string() const { return str; }
 
-		void		set_double(double d) { this->d_nbr = d;}
-		double		get_double() const { return d_nbr; }
-
-		void		set_string(const std::string& s) { this->str = s; }
-		std::string	get_string() const { return str; }
-
-		void		set_bool(bool value) { val = value; }
-		bool		get_bool() const { return val; }
-//----------------------------------------------------------------------
-	private:
-		enumType	val_type;
-		bool		val;
-		int			nbr;
-		double		d_nbr;
-		std::string	str;
+		void set_bool(bool val) { this->value = val; }
+		bool get_bool() const { return value; }
+	//-----------------------------------------------
+private:
+	// private section for member data
+	Utils::Type	my_type;
+	bool value;
+	int number;
+	double floate_number;
+	std::string str;
 };
-
 
 #endif
